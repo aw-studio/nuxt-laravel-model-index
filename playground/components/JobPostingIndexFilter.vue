@@ -14,14 +14,14 @@
       </div>
       <div>
         <input
-          type="number"
           v-model="workHoursFrom"
+          type="number"
           placeholder="Work hours from"
           class="border"
         />
         <input
-          type="number"
           v-model="workHoursTo"
+          type="number"
           placeholder="Work hours to"
           class="border"
         />
@@ -32,9 +32,9 @@
           :key="country"
         >
           <input
+            v-model="selectedCountries"
             type="checkbox"
             :value="country"
-            v-model="selectedCountries"
           />
           {{ country }}
         </label>
@@ -45,9 +45,9 @@
           :key="region"
         >
           <input
+            v-model="selectedRegions"
             type="checkbox"
             :value="region"
-            v-model="selectedRegions"
           />
           {{ region }}
         </label>
@@ -58,15 +58,15 @@
           :key="employmentType"
         >
           <input
+            v-model="selectedEmplymentType"
             type="radio"
             :value="employmentType"
-            v-model="selectedEmplymentType"
           />
           {{ employmentType }}
         </label>
         <button
-          @click="resetEmploymentType"
           class="bg-gray-400 px-2"
+          @click="resetEmploymentType"
         >
           Reset
         </button>

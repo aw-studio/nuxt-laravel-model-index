@@ -37,15 +37,15 @@
 
       <button
         :disabled="!hasPrevPage"
-        @click="prevPage"
         class="border border-gray-500 p-2"
+        @click="prevPage"
       >
         prev
       </button>
       <button
         :disabled="!hasNextPage"
-        @click="nextPage"
         class="border border-gray-500 p-2"
+        @click="nextPage"
       >
         next
       </button>

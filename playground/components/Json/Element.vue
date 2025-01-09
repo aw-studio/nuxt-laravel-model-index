@@ -23,8 +23,16 @@
         </div>
       </button>
       <span>
-        <span v-if="isArray" class="text-athens-gray-500">[</span>
-        <span v-else-if="isObject" class="text-athens-gray-500">{</span>
+        <span
+          v-if="isArray"
+          class="text-athens-gray-500"
+          >[</span
+        >
+        <span
+          v-else-if="isObject"
+          class="text-athens-gray-500"
+          >{</span
+        >
       </span>
       <div
         v-if="isString || isNumber || isBoolean"
@@ -44,7 +52,10 @@
         </span>
         <span v-if="isString">"</span>
       </div>
-      <div v-if="(isArray || isObject) && show" class="w-full pl-5">
+      <div
+        v-if="(isArray || isObject) && show"
+        class="w-full pl-5"
+      >
         <Element
           v-for="(child, key) in el"
           :key="key"
@@ -56,14 +67,22 @@
         <span>…</span>
       </div>
       <span>
-        <span v-if="isArray" class="text-athens-gray-500">]</span>
-        <span v-else-if="isObject" class="text-athens-gray-500">}</span>
+        <span
+          v-if="isArray"
+          class="text-athens-gray-500"
+          >]</span
+        >
+        <span
+          v-else-if="isObject"
+          class="text-athens-gray-500"
+          >}</span
+        >
       </span>
     </div>
   </li>
 </template>
+
 <script setup lang="ts">
-import Element from './Element.vue';
 const props = defineProps({
   label: {
     type: String,
@@ -73,19 +92,19 @@ const props = defineProps({
     type: [Object, Array, String, Boolean, Number],
     required: true,
   },
-});
+})
 
-const isArray = Array.isArray(props.el);
-const isObject = typeof props.el === 'object';
-const isString = typeof props.el === 'string';
-const isNumber = typeof props.el === 'number';
-const isBoolean = typeof props.el === 'boolean';
+const isArray = Array.isArray(props.el)
+const isObject = typeof props.el === 'object'
+const isString = typeof props.el === 'string'
+const isNumber = typeof props.el === 'number'
+const isBoolean = typeof props.el === 'boolean'
 
-const show = ref(false);
+const show = ref(false)
 
 const toggle = () => {
   if (isArray || isObject) {
-    show.value = !show.value;
+    show.value = !show.value
   }
-};
+}
 </script>

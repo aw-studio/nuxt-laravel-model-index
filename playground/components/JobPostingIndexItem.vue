@@ -6,11 +6,9 @@
 </template>
 
 <script setup lang="ts">
-import { JobPosting } from '~/types'
-
 defineProps({
   jobPosting: {
-    type: Object as PropType<JobPosting>,
+    type: Object as PropType<any>,
     required: true,
   },
 })
