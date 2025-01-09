@@ -1,0 +1,1 @@
+# Nuxt Laravel Model Index
