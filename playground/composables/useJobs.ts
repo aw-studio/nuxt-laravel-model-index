@@ -1,4 +1,4 @@
-import { useModelIndex } from '../../src/runtime/composables/useModelIndex'
+import { useModelIndex } from '#imports'
 
 type JobPosting = {
   title: string

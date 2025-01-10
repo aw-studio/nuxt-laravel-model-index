@@ -88,16 +88,12 @@ const { setFilter, setSearch, state, setSortBy } = useJobPostings()
 const computedFilter = computed(() => {
   const filter: Record<string, any> = {}
 
-  const countryFilter = selectedCountries.value.map((country: string) => {
-    return {
-      job_location_address_country: {
-        $eq: country,
-      },
-    }
-  })
-
-  if (countryFilter.length > 0) {
-    filter.$or = countryFilter
+  if (selectedCountries.value.length > 0) {
+    filter.$or = selectedCountries.value.map((country: string) => {
+      return {
+        job_location_address_country: country,
+      }
+    })
   }
 
   if (selectedEmplymentType.value !== undefined) {

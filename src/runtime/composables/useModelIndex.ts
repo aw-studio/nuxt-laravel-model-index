@@ -229,19 +229,19 @@ export function useModelIndex<T>(endpoint: string) {
   return {
     ...toRefs(state.value),
     state,
-    setPerPage,
     hasNextPage,
     hasPrevPage,
     nextPage,
     prevPage,
+    setPerPage,
     setPage,
     setSearch,
     setFilter,
     setSortBy,
     setSyncUrl,
     setConfig,
-    loadAll,
     load,
+    loadAll,
     loadMore,
   }
 }

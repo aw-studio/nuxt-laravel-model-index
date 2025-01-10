@@ -4,10 +4,7 @@
       <JobPostingIndexFilter />
 
       {{ meta?.current_page }} / {{ meta?.last_page }}, ({{ perPage }})
-      <div
-        ref="itemsContainer"
-        class="grid grid-cols-3 gap-6"
-      >
+      <div class="grid grid-cols-3 gap-6">
         <JobPostingIndexItem
           v-for="(item, index) in items"
           :key="index"
@@ -78,8 +75,6 @@ const {
   prevPage,
   setConfig,
 } = useJobPostings()
-
-const itemsContainer = ref<HTMLDivElement | null>(null)
 
 onMounted(async () => {
   setConfig({
