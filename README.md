@@ -199,7 +199,7 @@ The response meta with all pagination info is stored in the `meta` object.
 The `loading` element outputes the current loading state of the index.
 
 
-```ts
+```vue
 <template>
     <div>
         <Spinner v-if="loading">
@@ -230,7 +230,7 @@ export const useProducts = () => {
 
 Show the product index in a component:
 
-```ts
+```vue
 <template>
     <div>
         <YourFilterComponent />
@@ -282,7 +282,7 @@ onMounted(async () => {
 
 Create a Search
 
-```ts
+```vue
 <template>
     <div>
         <input
@@ -307,7 +307,7 @@ watch(
 
 Create a Filter
 
-```ts
+```vue
 <template>
     <div>
         <label
