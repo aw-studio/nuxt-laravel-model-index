@@ -20,7 +20,11 @@ export type IndexResponse<T> = {
   links?: LaravelResponseLinks
 }
 
-export type ModelIndexState<T> = {
+export type LaravelModelResource = {
+  id: string | number
+}
+
+export type ModelIndexState<T extends LaravelModelResource> = {
   items: T[]
   error: {
     message: string

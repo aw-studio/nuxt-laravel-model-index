@@ -6,12 +6,15 @@ import { md5 } from '../utils/md5'
 import type {
   Filter,
   IndexResponse,
+  LaravelModelResource,
   LaravelResponseMeta,
   ModelIndexState,
 } from '../types'
 import { prepareQueryParams } from '../utils/prepareQueryParams'
 
-export function useModelIndex<T>(endpoint: string) {
+export function useModelIndex<T extends LaravelModelResource>(
+  endpoint: string
+) {
   const router = useRouter()
   const route = useRoute()
   const config = useRuntimeConfig().public.modelIndex as ModuleOptions
@@ -197,6 +200,24 @@ export function useModelIndex<T>(endpoint: string) {
     load(state.value.meta.current_page! + 1, true)
   }
 
+  /**
+   * Mutate an item in the state.
+   * @param id
+   * @param data
+   */
+  const mutateStateItem = (id: string | number, data: Partial<T>) => {
+    const index = state.value.items.findIndex(item => {
+      return item.id === id
+    })
+
+    if (index !== -1) {
+      state.value.items[index] = {
+        ...state.value.items[index],
+        ...data,
+      }
+    }
+  }
+
   watch(
     [
       () => state.value.sortBy,
@@ -243,5 +264,6 @@ export function useModelIndex<T>(endpoint: string) {
     load,
     loadAll,
     loadMore,
+    mutateStateItem,
   }
 }

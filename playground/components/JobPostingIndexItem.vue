@@ -1,7 +1,7 @@
 <template>
   <div>
+    ({{ jobPosting.id }})
     <h3>{{ jobPosting.title }}</h3>
-    {{ jobPosting.workHours }}
   </div>
 </template>
 

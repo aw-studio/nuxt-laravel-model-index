@@ -25,5 +25,6 @@ export default createConfigForNuxt({
     'vue/html-self-closing': 'off',
     'vue/singleline-html-element-content-newline': 'off',
     'nuxt/nuxt-config-keys-order': 'off',
+    '@stylistic/arrow-parens': 'off',
   },
 })
