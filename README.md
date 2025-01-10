@@ -1,4 +1,5 @@
 [![npm version][npm-version-src]][npm-version-href]
+![CI](https://github.com/aw-studio/nuxt-laravel-model-index/actions/workflows/ci.yml/badge.svg)
 
 # Nuxt Laravel Model Index
 
@@ -21,7 +22,7 @@ It is recommended to use the [Laravel Model Index](https://github.com/aw-studio/
 
 ## Setup
 
-1. Add `nuxt-laravel-model-index` as a dependency in your project.
+1. Add `@aw-studio/nuxt-laravel-model-index` as a dependency in your project. The package can be found [here](https://www.npmjs.com/package/@aw-studio/nuxt-laravel-model-index).
 
 ```bash
 npm i @aw-studio/nuxt-laravel-model-index
