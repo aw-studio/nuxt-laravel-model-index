@@ -1,10 +1,25 @@
+[![npm version][npm-version-src]][npm-version-href]
+
 # Nuxt Laravel Model Index
 
-This Nuxt Module provides an opinionated API for Laravel Models with searching, powerful filtering, pagination and sorting.
+This Nuxt Module provides an opinionated API for Laravel Model Indexes.
 
 It is recommended to use the [Laravel Model Index](https://github.com/aw-studio/laravel-model-index) package in your Laravel project.
 
-# Setup
+-   [Features](#features)
+-   [Setup](#setup)
+-   [Usage](#usage)
+-   [Example](#example)
+
+## Features
+- Laravel API index queries with URL-encoded parameters
+- Complex Filtering
+- Pagination
+- Searching
+- Sorting
+- Mutateable Index State
+
+## Setup
 
 1. Add `nuxt-laravel-model-index` as a dependency in your project.
 
@@ -30,7 +45,7 @@ export default defineNuxtConfig({
 
 You can now add indexes for all of your Laravel Models.
 
-# Usage
+## Usage
 
 The `useModelIndex` composable is auto-imported. It takes the relative path to your api endpoint as a parameter which is also used as an identifier for the state object so make shure it is unique.
 
@@ -47,7 +62,7 @@ export const useProducts = () => {
 
 Thats it. You have now a stateful, filterable Laravel API.
 
-## Configuration
+### Configuration
 
 You can set your index config like this:
 
@@ -64,7 +79,7 @@ setPerPage(10)
 setSyncUrl(false)
 ```
 
-## Data Fetching
+### Data Fetching
 
 These functions allow you to fetch data from your API:
 ```ts
@@ -88,14 +103,14 @@ const getProducts = async () => {
 }
 ```
 
-## Retrieving Data
+### Retrieving Data
 
 The model `items` are stored state:
 ```ts
 const { items } = useProducts()
 ```
 
-## Searching
+### Searching
 
 You can trigger an index search by setting a search string:
 ```ts
@@ -104,7 +119,7 @@ const { setSearch } = useProducts()
 setSearch('Foo')
 ```
 
-## Filtering
+### Filtering
 You can filter an index passing a filter object:
 ```ts
 const { setFilter } = useProducts()
@@ -163,7 +178,7 @@ Available Operators:
 |$between   | is between|
 
 
-## Sorting
+### Sorting
 
 You can sort your index like this:
 ```ts
@@ -178,7 +193,7 @@ setSortBy('-title')
 ```
 
 
-## Meta / Loading State 
+### Meta / Loading State 
 
 The response meta with all pagination info is stored in the `meta` object.
 The `loading` element outputes the current loading state of the index.
@@ -198,7 +213,7 @@ const { meta, loading } = useProducts()
 ```
 
 
-# Example
+## Example
 
 
 Setup an index for your `Products` Model by creating a `useProducts` composable.
@@ -336,3 +351,7 @@ watch(
 )
 </script>
 ```
+
+
+[npm-version-src]: https://img.shields.io/npm/v/@aw-studio/nuxt-laravel-model-index/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-version-href]: https://npmjs.com/package/@aw-studio/nuxt-laravel-model-index
