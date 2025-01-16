@@ -5,7 +5,7 @@ export const prepareQueryParams = (
   state: ModelIndexState<any>
 ): URLSearchParams => {
   const params = new URLSearchParams()
-  const { page, sortBy, search, filter, perPage } = state
+  const { page, sort, search, filter, perPage } = state
 
   if (page) {
     params.append('page', String(page))
@@ -13,8 +13,8 @@ export const prepareQueryParams = (
   if (perPage) {
     params.append('perPage', String(perPage))
   }
-  if (sortBy) {
-    params.append('sortBy', sortBy!)
+  if (sort) {
+    params.append('sort', sort!)
   }
   if (search) {
     params.append('search', search!)

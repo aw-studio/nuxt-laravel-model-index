@@ -183,14 +183,14 @@ Available Operators:
 
 You can sort your index like this:
 ```ts
-const { setSortBy } = useProducts()
+const { setSort } = useProducts()
 
 // sort by title in asc order
-setSortBy('title')
+setSort('title')
 
 // sort by title in desc order
-setSortBy('title:desc')
-setSortBy('-title')
+setSort('title:desc')
+setSort('-title')
 ```
 
 

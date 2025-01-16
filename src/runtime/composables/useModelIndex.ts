@@ -34,7 +34,7 @@ export function useModelIndex<T extends LaravelModelResource>(
     page: undefined as number | undefined,
     perPage: undefined as number | undefined,
     syncUrl: false,
-    sortBy: undefined as string | undefined,
+    sort: undefined as string | undefined,
     search: undefined as string | undefined,
     filter: {} as Filter,
     __updated: new Date(),
@@ -44,7 +44,7 @@ export function useModelIndex<T extends LaravelModelResource>(
   const setConfig = (config: {
     perPage?: number
     syncUrl?: boolean
-    sortBy?: string
+    sort?: string
   }) => {
     if (config.perPage) {
       state.value.perPage = config.perPage
@@ -67,7 +67,12 @@ export function useModelIndex<T extends LaravelModelResource>(
     try {
       const response: IndexResponse<T> = await ofetch(
         `${endpoint}?${params.toString()}`,
-        { baseURL: config.baseUrl }
+        {
+          baseURL: config.baseUrl,
+          headers: {
+            Accept: 'application/json',
+          },
+        }
       )
 
       // if append is true, append the new items to the existing items
@@ -135,8 +140,8 @@ export function useModelIndex<T extends LaravelModelResource>(
     state.value.filter = filter
   }
 
-  const setSortBy = (sortBy: string) => {
-    state.value.sortBy = sortBy
+  const setSort = (sort: string) => {
+    state.value.sort = sort
   }
 
   const setSyncUrl = (syncUrl: boolean) => {
@@ -220,14 +225,14 @@ export function useModelIndex<T extends LaravelModelResource>(
 
   watch(
     [
-      () => state.value.sortBy,
+      () => state.value.sort,
       () => state.value.search,
       () => state.value.filter,
     ],
     () => {
       const hash = md5(
         JSON.stringify({
-          sortBy: state.value.sortBy,
+          sort: state.value.sort,
           search: state.value.search,
           filter: state.value.filter,
         })
@@ -258,7 +263,7 @@ export function useModelIndex<T extends LaravelModelResource>(
     setPage,
     setSearch,
     setFilter,
-    setSortBy,
+    setSort,
     setSyncUrl,
     setConfig,
     load,

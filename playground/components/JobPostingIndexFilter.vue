@@ -73,8 +73,8 @@
       </div>
     </div>
 
-    <button @click="sortBy('title')">Sort by Title</button>
-    <button @click="sortBy('title:desc')">Sort by Title (Desc)</button>
+    <button @click="setSort('title')">Sort by Title</button>
+    <button @click="setSort('title:desc')">Sort by Title (Desc)</button>
 
     <div>
       <pre>{{ state.filter }}</pre>
@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-const { setFilter, setSearch, state, setSortBy } = useJobPostings()
+const { setFilter, setSearch, state, setSort } = useJobPostings()
 
 const computedFilter = computed(() => {
   const filter: Record<string, any> = {}
@@ -147,8 +147,8 @@ const resetEmploymentType = () => {
 const workHoursFrom = ref(0)
 const workHoursTo = ref(0)
 
-const sortBy = (attr: string) => {
-  setSortBy(attr)
+const setSort = (attr: string) => {
+  setSort(attr)
 }
 
 watch(

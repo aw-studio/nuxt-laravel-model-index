@@ -11,7 +11,7 @@ describe('prepareQueryParams', async () => {
       page: 1,
       perPage: 10,
       syncUrl: false,
-      sortBy: 'name',
+      sort: 'name',
       search: 'john',
       filter: {
         name: { $eq: 'john' },
@@ -35,7 +35,7 @@ describe('prepareQueryParams', async () => {
       page: 1,
       perPage: 10,
       syncUrl: false,
-      sortBy: 'name',
+      sort: 'name',
       search: 'john',
       filter: {},
       __updated: new Date(),
@@ -46,7 +46,7 @@ describe('prepareQueryParams', async () => {
 
     expect(result.get('page')).toBe('1')
     expect(result.get('perPage')).toBe('10')
-    expect(result.get('sortBy')).toBe('name')
+    expect(result.get('sort')).toBe('name')
     expect(result.get('search')).toBe('john')
   })
 

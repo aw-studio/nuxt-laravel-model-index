@@ -35,7 +35,7 @@ export type ModelIndexState<T extends LaravelModelResource> = {
   page?: number
   perPage?: number
   syncUrl: boolean
-  sortBy?: string
+  sort?: string
   search?: string
   filter: Filter
   __updated: Date
