@@ -6,15 +6,12 @@ import { md5 } from '../utils/md5'
 import type {
   Filter,
   IndexResponse,
-  LaravelModelResource,
   LaravelResponseMeta,
   ModelIndexState,
 } from '../types'
 import { prepareQueryParams } from '../utils/prepareQueryParams'
 
-export function useModelIndex<T extends LaravelModelResource>(
-  endpoint: string
-) {
+export function useModelIndex<T extends object>(endpoint: string) {
   const router = useRouter()
   const route = useRoute()
   const config = useRuntimeConfig().public.modelIndex as ModuleOptions
@@ -208,9 +205,22 @@ export function useModelIndex<T extends LaravelModelResource>(
    * @param id
    * @param data
    */
-  const mutateStateItem = (id: string | number, data: Partial<T>) => {
-    const index = state.value.items.findIndex(item => {
-      return item.id === id
+  const mutateStateItem = (
+    id: string | number,
+    data: Partial<T>,
+    idKey?: string
+  ) => {
+    if (!idKey) {
+      idKey = 'id'
+    }
+
+    const index = state.value.items.findIndex((item: T) => {
+      if (!(idKey in item)) {
+        throw new Error(
+          `Key ${idKey} not found in item ${JSON.stringify(item)}`
+        )
+      }
+      return item[idKey as keyof typeof item] === id
     })
 
     if (index !== -1) {
