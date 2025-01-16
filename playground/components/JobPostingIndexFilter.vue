@@ -73,8 +73,8 @@
       </div>
     </div>
 
-    <button @click="setSort('title')">Sort by Title</button>
-    <button @click="setSort('title:desc')">Sort by Title (Desc)</button>
+    <button @click="sort('title')">Sort by Title</button>
+    <button @click="sort('-title')">Sort by Title (Desc)</button>
 
     <div>
       <pre>{{ state.filter }}</pre>
@@ -147,7 +147,7 @@ const resetEmploymentType = () => {
 const workHoursFrom = ref(0)
 const workHoursTo = ref(0)
 
-const setSort = (attr: string) => {
+const sort = (attr: string) => {
   setSort(attr)
 }
 

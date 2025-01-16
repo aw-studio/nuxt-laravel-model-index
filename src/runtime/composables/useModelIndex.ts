@@ -169,7 +169,6 @@ export function useModelIndex<T extends LaravelModelResource>(
     // set the current page to the page in the URL.
     // if no page is passed and syncUrl is disabled, set the current page to 1.
     // then, if syncUrl is enabled, update the URL with the new page
-    console.log(state.value.syncUrl, route.query.page)
 
     if (page) {
       state.value.page = page
@@ -180,7 +179,6 @@ export function useModelIndex<T extends LaravelModelResource>(
     }
 
     if (state.value.syncUrl) {
-      console.log('syncing url', state.value.page)
       router.push({
         query: { ...route.query, page: state.value.page },
       })
