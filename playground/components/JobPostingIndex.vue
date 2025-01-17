@@ -13,7 +13,7 @@
       </div>
 
       <div
-        v-if="state.loading"
+        v-if="state?.loading"
         class="flex justify-center"
       >
         <svg
@@ -48,14 +48,14 @@
       </button>
       <div class="bg-blue-950 text-white p-4">
         <Json
-          :key="state.__hash"
-          :data="state.meta"
+          :key="state?.__hash"
+          :data="state?.meta"
         />
       </div>
     </div>
     <div class="text-xs bg-black text-green-500 p-4 overflow-scroll h-screen">
       <Json
-        :key="state.__hash"
+        :key="state?.__hash"
         :data="state"
       />
     </div>
@@ -66,22 +66,16 @@
 const {
   items,
   state,
-  load,
   perPage,
   meta,
   hasNextPage,
   hasPrevPage,
   nextPage,
   prevPage,
-  setConfig,
-} = useJobPostings()
-
-onMounted(async () => {
-  setConfig({
-    perPage: 6,
-    syncUrl: true,
-  })
-
-  await load()
+} = await useJobPostings({
+  perPage: 6,
+  syncUrl: true,
+  sort: 'title',
+  ssr: true,
 })
 </script>

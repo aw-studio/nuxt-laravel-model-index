@@ -36,6 +36,14 @@ export type ModelIndexState<T> = {
   filter: Filter
   __updated: Date
   __hash?: string
+  __ssr: boolean
+}
+
+export type ModelIndexOptions = {
+  perPage?: number
+  syncUrl?: boolean
+  sort?: string
+  ssr?: boolean
 }
 
 export type FilterOperatorOption =

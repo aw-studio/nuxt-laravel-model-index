@@ -1,5 +1,6 @@
 export default defineNuxtConfig({
   modules: ['../src/module'],
+  ssr: true,
   modelIndex: {
     baseUrl: 'http://localhost:8000',
   },

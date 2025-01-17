@@ -68,7 +68,18 @@ Thats it. You have now a stateful, filterable Laravel API.
 You can set your index config like this:
 
 ```ts
-const { setConfig, setPerPage, setSyncUrl } = useProducts()
+const {items} = await useJobPostings({
+  perPage: 6,
+  syncUrl: true,
+  sort: 'title',
+  ssr: true,
+})
+```
+
+You may also change the config during runtime using the helper functions:
+
+```ts
+const { setConfig, setPerPage, setSyncUrl } = await useProducts()
 
 setConfig({
     perPage: 6, // Pagination items per page
@@ -80,11 +91,25 @@ setPerPage(10)
 setSyncUrl(false)
 ```
 
+### SSR
+
+If you need SSR-compatibility you can pass the `ssr` option. The index items will 
+initially be loaded:
+
+```ts
+const {items} = await useJobPostings({
+  perPage: 6,
+  syncUrl: true,
+  sort: 'title',
+  ssr: true,
+})
+```
+
 ### Data Fetching
 
 These functions allow you to fetch data from your API:
 ```ts
-const { load, loadAll, loadMore, nextPage, prevPage } = useProducts()
+const { load, loadAll, loadMore, nextPage, prevPage } = await useProducts()
 
 const getProducts = async () => {
   // Load the first page of products
@@ -108,14 +133,14 @@ const getProducts = async () => {
 
 The model `items` are stored state:
 ```ts
-const { items } = useProducts()
+const { items } = await useProducts()
 ```
 
 ### Searching
 
 You can trigger an index search by setting a search string:
 ```ts
-const { setSearch } = useProducts()
+const { setSearch } = await useProducts()
 
 setSearch('Foo')
 ```
@@ -123,7 +148,7 @@ setSearch('Foo')
 ### Filtering
 You can filter an index passing a filter object:
 ```ts
-const { setFilter } = useProducts()
+const { setFilter } = await useProducts()
 
 // basic filter
 setFilter({
@@ -183,7 +208,7 @@ Available Operators:
 
 You can sort your index like this:
 ```ts
-const { setSort } = useProducts()
+const { setSort } = await useProducts()
 
 // sort by title in asc order
 setSort('title')
@@ -209,7 +234,7 @@ The `loading` element outputes the current loading state of the index.
 </template>
 
 <script setup lang="ts">
-const { meta, loading } = useProducts()
+const { meta, loading } = await useProducts()
 </script>
 ```
 
@@ -268,7 +293,7 @@ const {
   nextPage,
   prevPage,
   setConfig,
-} = useProducts();
+} = await useProducts();
 
 onMounted(async () => {
   setConfig({
@@ -295,7 +320,7 @@ Create a Search
 </template>
 
 <script setup lang="ts">
-const { setSearch } = useProducts();
+const { setSearch } = await useProducts();
 
 watch(
   () => searchterm.value,
@@ -326,7 +351,7 @@ Create a Filter
 </template>
 
 <script setup lang="ts">
-const { setFilter } = useProducts();
+const { setFilter } = await useProducts();
 
 const sizes = ['S', 'M', 'L', 'XL']
 const selectedSizes = ref<string[]>([])
@@ -342,9 +367,7 @@ const filter = computed(()=>{
 })
 
 watch(
-  [
-    selectedSizes
-  ],
+  () => filter.value,
   () => {
     setFilter(filter.value)
   },

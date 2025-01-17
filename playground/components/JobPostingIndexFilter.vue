@@ -10,7 +10,7 @@
           placeholder="Search"
           class="border"
         />
-        {{ state.search }}
+        <!-- {{ state.search }} -->
       </div>
       <div>
         <input
@@ -77,13 +77,13 @@
     <button @click="sort('-title')">Sort by Title (Desc)</button>
 
     <div>
-      <pre>{{ state.filter }}</pre>
+      <pre>{{ state?.filter }}</pre>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { setFilter, setSearch, state, setSort } = useJobPostings()
+const { setFilter, setSearch, state, setSort } = await useJobPostings()
 
 const computedFilter = computed(() => {
   const filter: Record<string, any> = {}

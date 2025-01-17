@@ -1,5 +1,11 @@
 import { ofetch } from 'ofetch'
-import { useRoute, useRouter, useRuntimeConfig, useState } from 'nuxt/app'
+import {
+  useAsyncData,
+  useRoute,
+  useRouter,
+  useRuntimeConfig,
+  useState,
+} from 'nuxt/app'
 import { computed, toRefs, watch } from 'vue'
 import type { ModuleOptions } from '../../module'
 import { md5 } from '../utils/md5'
@@ -7,11 +13,15 @@ import type {
   Filter,
   IndexResponse,
   LaravelResponseMeta,
+  ModelIndexOptions,
   ModelIndexState,
 } from '../types'
 import { prepareQueryParams } from '../utils/prepareQueryParams'
 
-export function useModelIndex<T extends object>(endpoint: string) {
+export async function useModelIndex<T extends object>(
+  endpoint: string,
+  options?: ModelIndexOptions
+) {
   const router = useRouter()
   const route = useRoute()
   const config = useRuntimeConfig().public.modelIndex as ModuleOptions
@@ -36,18 +46,21 @@ export function useModelIndex<T extends object>(endpoint: string) {
     filter: {} as Filter,
     __updated: new Date(),
     __hash: undefined as string | undefined,
+    __ssr: false,
   }))
 
-  const setConfig = (config: {
-    perPage?: number
-    syncUrl?: boolean
-    sort?: string
-  }) => {
+  const setConfig = (config: ModelIndexOptions) => {
     if (config.perPage) {
       state.value.perPage = config.perPage
     }
     if (config.syncUrl) {
       state.value.syncUrl = config.syncUrl
+    }
+    if (config.sort) {
+      state.value.sort = config.sort
+    }
+    if (config.ssr) {
+      state.value.__ssr = config.ssr
     }
   }
 
@@ -231,6 +244,22 @@ export function useModelIndex<T extends object>(endpoint: string) {
     }
   }
 
+  const stateHash = () => {
+    const hash = md5(
+      JSON.stringify({
+        sort: state.value.sort,
+        search: state.value.search,
+        filter: state.value.filter,
+      })
+    )
+    // if the hash is the same as the previous hash, don't fetch
+    if (state.value.__updated && state.value.__hash === hash) {
+      return
+    }
+    state.value.__updated = new Date()
+    state.value.__hash = hash
+  }
+
   watch(
     [
       () => state.value.sort,
@@ -238,19 +267,7 @@ export function useModelIndex<T extends object>(endpoint: string) {
       () => state.value.filter,
     ],
     () => {
-      const hash = md5(
-        JSON.stringify({
-          sort: state.value.sort,
-          search: state.value.search,
-          filter: state.value.filter,
-        })
-      )
-      // if the hash is the same as the previous hash, don't fetch
-      if (state.value.__updated && state.value.__hash === hash) {
-        return
-      }
-      state.value.__updated = new Date()
-      state.value.__hash = hash
+      stateHash()
 
       if (state.value.page) {
         load(1)
@@ -259,6 +276,18 @@ export function useModelIndex<T extends object>(endpoint: string) {
       }
     }
   )
+
+  if (options) {
+    setConfig(options)
+  }
+
+  // load the first page on init
+  if (state.value.__hash === undefined) {
+    stateHash()
+    await useAsyncData(`${endpoint}`, async () => {
+      return await load()
+    })
+  }
 
   return {
     ...toRefs(state.value),
