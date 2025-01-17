@@ -28,8 +28,6 @@ It is recommended to use the [Laravel Model Index](https://github.com/aw-studio/
 - Sorting
 - Mutateable Index State
 
----
-
 ## Setup
 
 ### 1. Install the module
@@ -57,8 +55,6 @@ export default defineNuxtConfig({
 
 You can now create indexes for all your Laravel models.
 
----
-
 ## Usage
 
 The `useModelIndex` composable is auto-imported. Pass the relative path to your API endpoint as a parameter, which also serves as the identifier for the state object. Ensure this parameter is unique.
@@ -77,8 +73,6 @@ export const useProducts = (options?: ModelIndexOptions) => {
 ```
 
 This composable now provides a stateful, filterable Laravel API index.
-
----
 
 ### Configuration
 
@@ -107,8 +101,6 @@ setPerPage(10);
 setSyncUrl(false);
 ```
 
----
-
 ### SSR
 
 Enable SSR compatibility by passing the `ssr` option. Items will be loaded during server-side rendering:
@@ -121,8 +113,6 @@ const { items } = await useProducts({
   ssr: true,
 });
 ```
-
----
 
 ### Data Fetching
 
@@ -147,8 +137,6 @@ await load(6);
 await loadMore();
 ```
 
----
-
 ### Retrieving Data
 
 The model items are stored in a reactive state:
@@ -156,8 +144,6 @@ The model items are stored in a reactive state:
 ```ts
 const { items } = await useProducts()
 ```
-
----
 
 ### Searching
 
@@ -168,8 +154,6 @@ const { setSearch } = await useProducts();
 
 setSearch('Foo');
 ```
-
----
 
 ### Filtering
 
@@ -208,7 +192,7 @@ setFilter({
 #### Available Operators
 
 | Operator        | Description             |
-|-----------------|-------------------------|
+---|
 | `$eq`           | Equal to                |
 | `$ne`           | Not equal to            |
 | `$lt`           | Less than               |
@@ -221,7 +205,6 @@ setFilter({
 | `$notContains`  | Does not contain        |
 | `$between`      | Between values          |
 
----
 
 ### Sorting
 
@@ -238,12 +221,9 @@ setSort('title:desc');
 setSort('-title');
 ```
 
----
-
 ### Meta / Loading State 
 
 Pagination metadata and loading state are available:
-
 
 ```vue
 <template>
@@ -257,8 +237,6 @@ Pagination metadata and loading state are available:
 const { meta, loading } = await useProducts()
 </script>
 ```
-
----
 
 ## Example
 
