@@ -7,10 +7,18 @@ This Nuxt Module provides an opinionated API for Laravel Model Indexes.
 
 It is recommended to use the [Laravel Model Index](https://github.com/aw-studio/laravel-model-index) package in your Laravel project.
 
--   [Features](#features)
--   [Setup](#setup)
--   [Usage](#usage)
--   [Example](#example)
+- [Features](#features)
+- [Setup](#setup)
+- [Usage](#usage)
+  - [Configuration](#configuration)
+  - [SSR](#ssr)
+  - [Data Fetching](#data-fetching)
+  - [Retrieving Data](#retrieving-data)
+  - [Searching](#searching)
+  - [Filtering](#filtering)
+  - [Sorting](#sorting)
+  - [Meta / Loading State](#meta--loading-state)
+- [Example](#example)
 
 ## Features
 - Laravel API index queries with URL-encoded parameters
@@ -20,52 +28,61 @@ It is recommended to use the [Laravel Model Index](https://github.com/aw-studio/
 - Sorting
 - Mutateable Index State
 
+---
+
 ## Setup
 
-1. Add `@aw-studio/nuxt-laravel-model-index` as a dependency in your project. The package can be found [here](https://www.npmjs.com/package/@aw-studio/nuxt-laravel-model-index).
+### 1. Install the module
+
+Add `@aw-studio/nuxt-laravel-model-index` as a dependency in your project:
 
 ```bash
 npm i @aw-studio/nuxt-laravel-model-index
 ```
 
-2. Add the module config to you `nuxt.config.ts`
+### 2. Configure the module
+
+Add the module to your `nuxt.config.ts` file and configure the settings:
 
 ```ts
 export default defineNuxtConfig({
-    // add the module
-    modules: [
-         // ...
-        '@aw-studio/nuxt-laravel-model-index',
-    ],
-    // Add module specific settings
-    modelIndex: {
-        baseUrl: 'https://your-laravel-api.tld',
-    },
+  modules: [
+    '@aw-studio/nuxt-laravel-model-index',
+  ],
+  modelIndex: {
+    baseUrl: 'https://your-laravel-api.tld',
+  },
 });
 ```
 
-You can now add indexes for all of your Laravel Models.
+You can now create indexes for all your Laravel models.
+
+---
 
 ## Usage
 
-The `useModelIndex` composable is auto-imported. It takes the relative path to your api endpoint as a parameter which is also used as an identifier for the state object so make shure it is unique.
+The `useModelIndex` composable is auto-imported. Pass the relative path to your API endpoint as a parameter, which also serves as the identifier for the state object. Ensure this parameter is unique.
 
-Setting up an index as as simple as creating a composable for reusability like this:
+### Example Setup
+
+Create a composable for reusability:
 
 ```ts
+import { ModelIndexOptions } from '@aw-studio/nuxt-laravel-model-index';
 import { Product } from '@/types';
 
-export const useProducts = () => {
-    // pass the relative path to your products API
-    return useModelIndex<Product>('/api/products');
+export const useProducts = (options?: ModelIndexOptions) => {
+  return useModelIndex<Product>('/api/products', options);
 };
 ```
 
-Thats it. You have now a stateful, filterable Laravel API.
+This composable now provides a stateful, filterable Laravel API index.
+
+---
 
 ### Configuration
 
-You can set your index config like this:
+You can set up the index configuration when initializing the composable:
 
 ```ts
 const {items} = await useJobPostings({
@@ -76,153 +93,156 @@ const {items} = await useJobPostings({
 })
 ```
 
-You may also change the config during runtime using the helper functions:
+You can also dynamically update the configuration during runtime:
 
 ```ts
-const { setConfig, setPerPage, setSyncUrl } = await useProducts()
+const { setConfig, setPerPage, setSyncUrl } = await useProducts();
 
 setConfig({
-    perPage: 6, // Pagination items per page
-    syncUrl: true, // wheter or not to sync the index with the URL
-})
+  perPage: 6,
+  syncUrl: true,
+});
 
-setPerPage(10)
-
-setSyncUrl(false)
+setPerPage(10);
+setSyncUrl(false);
 ```
+
+---
 
 ### SSR
 
-If you need SSR-compatibility you can pass the `ssr` option. The index items will 
-initially be loaded:
+Enable SSR compatibility by passing the `ssr` option. Items will be loaded during server-side rendering:
 
 ```ts
-const {items} = await useJobPostings({
+const { items } = await useProducts({
   perPage: 6,
   syncUrl: true,
   sort: 'title',
   ssr: true,
-})
+});
 ```
+
+---
 
 ### Data Fetching
 
-These functions allow you to fetch data from your API:
+These functions allow you to interact with the API:
+
 ```ts
-const { load, loadAll, loadMore, nextPage, prevPage } = await useProducts()
+const { load, loadAll, loadMore, nextPage, prevPage } = await useProducts();
 
-const getProducts = async () => {
-  // Load the first page of products
-  await load() 
+// Load the first page
+await load();
 
-  // Load the next page of products
-  await nextPage()
+// Load the next page
+await nextPage();
 
-  // Load the previous page of products
-  await prevPage()
+// Load the previous page
+await prevPage();
 
-  // Load the sixth page of products
-  await load(6)
+// Load a specific page (e.g., page 6)
+await load(6);
 
-  // Load more products and append to the existing list, useful for infinite scrolling
-  await loadMore()
-}
+// Append more items (useful for infinite scrolling)
+await loadMore();
 ```
+
+---
 
 ### Retrieving Data
 
-The model `items` are stored state:
+The model items are stored in a reactive state:
+
 ```ts
 const { items } = await useProducts()
 ```
 
+---
+
 ### Searching
 
-You can trigger an index search by setting a search string:
-```ts
-const { setSearch } = await useProducts()
+Trigger a search by setting a search string:
 
-setSearch('Foo')
+```ts
+const { setSearch } = await useProducts();
+
+setSearch('Foo');
 ```
 
+---
+
 ### Filtering
-You can filter an index passing a filter object:
+
+Apply filters by passing a filter object:
+
 ```ts
 const { setFilter } = await useProducts()
 
-// basic filter
+// Basic filter
 setFilter({
     size: 'M',
     color: 'blue'
 })
 
-// smaller operation
+// Filter with operators
 setFilter({
+  price: { $lt: 100 },
+});
+
+// Complex conditions
+setFilter({
+  $and: [
+    {
+        $or: [
+            { title: { $contains: 'John' } },
+            { title: { $contains: 'Paul' } },
+        ],
+    },
+    { title: { $contains: 'John' } },
     { price: { $lt: 100 } },
-})
-
-// or condition
-setFilter({
-   $or: [
-        { title: { $contains: 'John' } },
-        { title: { $contains: 'Paul' } },
-    ],
-})
-
-// more complex 
-setFilter({
-    $and: [
-        {
-            $or: [
-                { title: { $contains: 'John' } },
-                { title: { $contains: 'Paul' } },
-            ],
-        },
-        { title: { $notContains: 'George' } },
-        { title: { $notContains: 'Ringo' } },
-        { price: { $lt: 100 } },
-        { size: { $in: ['S', 'M'] } },
-        { color: { $in: ['red', 'blue'] } },
-    ],
-})
+    { size: { $in: ['S', 'M'] } },
+  ],
+});
 ```
 
-Available Operators:
+#### Available Operators
 
-| Operator  | Description  |
-|---|---|
-|$eq    | equal to|
-|$ne    | not equal to|
-|$lt    | smaller |
-|$lte   | smaller or equal|
-|$gt    | greater |
-|$gte   | greater or equal|
-|$in    | in array|
-|$notIn | not in array|
-|$contains  | contains|
-|$notContains   | doesn't contain|
-|$between   | is between|
+| Operator        | Description             |
+|-----------------|-------------------------|
+| `$eq`           | Equal to                |
+| `$ne`           | Not equal to            |
+| `$lt`           | Less than               |
+| `$lte`          | Less than or equal to   |
+| `$gt`           | Greater than            |
+| `$gte`          | Greater than or equal to|
+| `$in`           | In array                |
+| `$notIn`        | Not in array            |
+| `$contains`     | Contains                |
+| `$notContains`  | Does not contain        |
+| `$between`      | Between values          |
 
+---
 
 ### Sorting
 
-You can sort your index like this:
+Sort the index with the following syntax:
+
 ```ts
-const { setSort } = await useProducts()
+const { setSort } = await useProducts();
 
-// sort by title in asc order
-setSort('title')
+// Sort ascending by title
+setSort('title');
 
-// sort by title in desc order
-setSort('title:desc')
-setSort('-title')
+// Sort descending by title
+setSort('title:desc');
+setSort('-title');
 ```
 
+---
 
 ### Meta / Loading State 
 
-The response meta with all pagination info is stored in the `meta` object.
-The `loading` element outputes the current loading state of the index.
+Pagination metadata and loading state are available:
 
 
 ```vue
@@ -238,100 +258,72 @@ const { meta, loading } = await useProducts()
 </script>
 ```
 
+---
 
 ## Example
 
-
-Setup an index for your `Products` Model by creating a `useProducts` composable.
+### Product Index Setup
 
 ```ts
+import { ModelIndexOptions } from '@aw-studio/nuxt-laravel-model-index';
 import { Product } from '@/types';
 
-export const useProducts = () => {
-    // pass the relative path to your products API
-    return useModelIndex<Product>('/api/products');
+export const useProducts = (options?: ModelIndexOptions) => {
+  return useModelIndex<Product>('/api/products', options);
 };
 ```
 
-
-Show the product index in a component:
+### Display Products
 
 ```vue
 <template>
-    <div>
-        <YourFilterComponent />
-        <YourProductComponent
-            v-for="item in items"
-            :product="item"
-        />
-        <button
-            @click="prevPage"
-            :disabled="!hasPrevPage"
-        >
-            prev
-        </button>
-        <button
-            @click="nextPage"
-            :disabled="!hasNextPage"
-        >
-            next
-        </button>
-        <div>
-            Page: {{ meta?.current_page }} / {{ meta?.last_page }}
-        </div>
-    </div>
+  <div>
+    <YourFilterComponent />
+    <YourProductComponent
+      v-for="item in items"
+      :key="item.id"
+      :product="item"
+    />
+    <button @click="prevPage" :disabled="!hasPrevPage">Previous</button>
+    <button @click="nextPage" :disabled="!hasNextPage">Next</button>
+    <div>Page: {{ meta?.current_page }} / {{ meta?.last_page }}</div>
+  </div>
 </template>
 
 <script setup lang="ts">
-const {
-  items,
-  load,
-  perPage,
-  meta,
-  hasNextPage,
-  hasPrevPage,
-  nextPage,
-  prevPage,
-  setConfig,
-} = await useProducts();
+const { items, meta, hasNextPage, hasPrevPage, nextPage, prevPage, load, setConfig } = await useProducts();
 
 onMounted(async () => {
   setConfig({
     perPage: 6,
     syncUrl: true,
-  })
+  });
 
-  await load()
-})
+  await load();
+});
 </script>
 ```
 
-Create a Search
+### Add Search Functionality
 
 ```vue
 <template>
-    <div>
-        <input
-            type="search"
-            v-model="searchterm"
-            placeholder="Search"
-        />
-    </div>
+  <div>
+    <input v-model="searchTerm" type="search" placeholder="Search" />
+  </div>
 </template>
 
 <script setup lang="ts">
 const { setSearch } = await useProducts();
+const searchTerm = ref('');
 
-watch(
-  () => searchterm.value,
-  () => {
-    setSearch(searchterm.value)
-  }
-)
+watch(searchTerm, () => {
+  setSearch(searchTerm.value);
+});
 </script>
 ```
 
-Create a Filter
+### Add Filter Functionality
 
 ```vue
 <template>
