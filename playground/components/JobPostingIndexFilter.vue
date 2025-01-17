@@ -39,19 +39,6 @@
           {{ country }}
         </label>
       </div>
-      <div>
-        <label
-          v-for="region in regions"
-          :key="region"
-        >
-          <input
-            v-model="selectedRegions"
-            type="checkbox"
-            :value="region"
-          />
-          {{ region }}
-        </label>
-      </div>
       <div class="flex gap-4">
         <label
           v-for="employmentType in employmentTypes"
@@ -66,7 +53,7 @@
         </label>
         <button
           class="bg-gray-400 px-2"
-          @click="resetEmploymentType"
+          @click="resetEmploymentType()"
         >
           Reset
         </button>
@@ -106,19 +93,6 @@ const computedFilter = computed(() => {
     ]
   }
 
-  const regionFilter =
-    selectedRegions.value.length > 0
-      ? {
-          job_location_address_region: {
-            $in: selectedRegions.value,
-          },
-        }
-      : {}
-
-  if (selectedRegions.value.length > 0) {
-    filter.$and.push(regionFilter)
-  }
-
   if (workHoursFrom.value > 0 && workHoursTo.value > workHoursFrom.value) {
     filter.$and.push({
       work_hours: {
@@ -132,9 +106,6 @@ const computedFilter = computed(() => {
 
 const countries = ['Nepal', 'Denmark', 'Lesotho']
 const selectedCountries = ref<string[]>([])
-
-const regions = ['Kansas', 'Arkansas']
-const selectedRegions = ref<string[]>([])
 
 const searchterm = ref('')
 
@@ -152,14 +123,7 @@ const sort = (attr: string) => {
 }
 
 watch(
-  [
-    selectedCountries,
-    selectedRegions,
-    selectedEmplymentType,
-    searchterm,
-    workHoursFrom,
-    workHoursTo,
-  ],
+  () => computedFilter.value,
   () => {
     setFilter(computedFilter.value)
   },
