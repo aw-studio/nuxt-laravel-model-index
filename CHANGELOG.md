@@ -1,4 +1,8 @@
 # Changelog
+## v0.0.11
+
+[compare changes](https://github.com/aw-studio/nuxt-laravel-model-index/compare/v0.0.10...v0.0.11)
+
 ## v0.0.10
 
 [compare changes](https://github.com/aw-studio/nuxt-laravel-model-index/compare/v0.0.9...v0.0.10)
