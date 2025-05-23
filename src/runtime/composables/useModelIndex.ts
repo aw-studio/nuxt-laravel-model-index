@@ -5,6 +5,7 @@ import {
   useRouter,
   useRuntimeConfig,
   useState,
+  useCookie,
 } from 'nuxt/app'
 import { computed, toRefs, watch } from 'vue'
 import type { ModuleOptions } from '../../module'
@@ -74,14 +75,19 @@ export async function useModelIndex<T extends object>(
 
     const params = prepareQueryParams(state.value)
 
+    // Get the XSRF token from cookies
+    const xsrfToken = useCookie('XSRF-TOKEN').value
+
     try {
       const response: IndexResponse<T> = await ofetch(
         `${endpoint}?${params.toString()}`,
         {
           baseURL: config.baseUrl,
           headers: {
-            Accept: 'application/json',
+            'Accept': 'application/json',
+            'X-XSRF-TOKEN': xsrfToken || '',
           },
+          credentials: 'include',
         }
       )
 
